@@ -5,22 +5,14 @@ import { AiTwotoneShop } from "react-icons/ai";
 import { BsPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { login, logout, onUserStateChange } from "../api/firebase";
+import User from "./User";
 
 export default function Header() {
-    const [user, setUser] = useState();
-    const handleLogin = () => {
-        login().then(setUser)
-    }
-    const handleLogout = () => {
-        logout().then(setUser)
-    }
+  const [user, setUser] = useState();
 
-    useEffect(() => {
-        onUserStateChange((user) => {
-            console.log(user);
-            setUser(user);
-        })
-    },[])
+  useEffect(() => {
+    onUserStateChange(setUser);
+  }, []);
 
   return (
     <header className="w-full h-20 flex justify-between items-center relative after:content-[''] after:bg-gray-200 after:w-full after:h-[2px] after:absolute after:bottom-0">
@@ -28,14 +20,15 @@ export default function Header() {
         <AiTwotoneShop />
         Shoppy
       </Link>
-      <nav className="flex gap-4 font-semibold">
+      <nav className="flex gap-4 font-semibold items-center">
         <Link to={"/products"}>Products</Link>
         <Link to={"/cart"}>Carts</Link>
         <Link className="flex items-center" to={"/new"}>
           <BsPencilFill />
         </Link>
-        {user && <button onClick={handleLogout}>Logout</button>}
-        {!user && <button onClick={handleLogin}>Login</button>}
+        {user && <User user={user} />}
+        {user && <button onClick={logout}>Logout</button>}
+        {!user && <button onClick={login}>Login</button>}
       </nav>
     </header>
   );
