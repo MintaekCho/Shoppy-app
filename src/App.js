@@ -1,12 +1,13 @@
 import { Outlet } from "react-router-dom";
+import { AuthContextProvider } from "./components/context/AuthContextProvider";
 import Header from "./components/Header";
 
 function App() {
   return (
-    <div className='px-10'>
+    <AuthContextProvider>
       <Header />
       <Outlet />
-    </div>
+    </AuthContextProvider>
   );
 }
 
