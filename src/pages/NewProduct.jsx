@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { writeProduct } from "../api/firebase";
+import { addNewProduct } from "../api/firebase";
+import { imageUpload } from "../api/upload";
 
 export default function NewProduct() {
   const [file, setFile] = useState();
@@ -14,19 +15,21 @@ export default function NewProduct() {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
   const handleSubmit = (e) => {
-    console.log("??");
-
     e.preventDefault();
-    writeProduct(product);
-    navigation('/')
+    imageUpload(file).then((url) => addNewProduct(product, url));
+    // navigation("/");
   };
 
-  console.log(product);
-
   return (
-    <form className="w-full max-w-7xl flex flex-col items-center justify-center">
+    <form className="w-full min-w-[330px] max-w-7xl flex flex-col items-center justify-center">
       <h2 className="text-xl font-bold my-4">새로운 제품 등록</h2>
-      {file && <img className="w-60 h-60" src={URL.createObjectURL(file)} alt="파일 이미지" />}
+      {file && (
+        <img
+          className="w-60 h-60"
+          src={URL.createObjectURL(file)}
+          alt="파일 이미지"
+        />
+      )}
       <input
         className="w-full border p-2 mt-2"
         name="file"

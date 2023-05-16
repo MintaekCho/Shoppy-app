@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+import { v4 as uuid } from "uuid";
 
 import { getDatabase, ref, child, get, set } from "firebase/database";
 
@@ -38,7 +39,7 @@ export async function logout() {
  */
 export function onUserStateChange(callback) {
   onAuthStateChanged(auth, async (user) => {
-    const updateUser = user ? await adminUser(user) : null; 
+    const updateUser = user ? await adminUser(user) : null;
     console.log(updateUser);
     callback(updateUser);
   });
@@ -57,8 +58,12 @@ async function adminUser(user) {
   });
 }
 
-export function writeProduct(product) {
-  set(ref(db, 'products/'), product);
+export function addNewProduct(product, image) {
+  const id = uuid();
+  set(ref(db, `products/${id}`), {
+    ...product,
+    image,
+    id,
+    options: product.options.split(","),
+  });
 }
-
-
