@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { addNewProduct } from "../api/firebase";
 import { imageUpload } from "../api/upload";
 
 export default function NewProduct() {
   const [file, setFile] = useState();
   const [product, setProduct] = useState({});
-  const navigation = useNavigate();
+  const [isLoding, setIsLoding] = useState(false);
+  const [success, setSuccess] = useState(null);
+//   const navigation = useNavigate();
   const handleChange = (e) => {
     if (e.target.name === "file") {
       setFile(e.target.files[0]);
@@ -16,13 +18,23 @@ export default function NewProduct() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    imageUpload(file).then((url) => addNewProduct(product, url));
+    setIsLoding(true);
+    imageUpload(file)
+      .then((url) => addNewProduct(product, url))
+      .then(() => setSuccess("✅새로운 제품을 등록하였습니다"))
+      .then(() =>
+        setTimeout(() => {
+          setSuccess(null);
+        }, 4000)
+      )
+      .finally(() => setIsLoding(false));
     // navigation("/");
   };
 
   return (
     <form className="w-full min-w-[330px] max-w-7xl flex flex-col items-center justify-center">
       <h2 className="text-xl font-bold my-4">새로운 제품 등록</h2>
+      {success && <p className="mb-1">{success}</p>}
       {file && (
         <img
           className="w-60 h-60"
@@ -85,8 +97,9 @@ export default function NewProduct() {
       <input
         className="w-full bg-red-400 mt-2 text-white p-2 font-bold cursor-pointer"
         type="button"
-        value="제품 등록하기"
+        value={isLoding ? "제품 등록중..." : "제품 등록하기"}
         onClick={handleSubmit}
+        disabled={isLoding}
       />
     </form>
   );

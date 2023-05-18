@@ -2,7 +2,11 @@
 module.exports = {
     content: ["./src/**/*.{jsx,js}"],
     theme: {
-      extend: {},
+      extend: {
+        backgroundImage: {
+          banner: `url('../public/image/banner.jpg')`
+        }
+      },
     },
     plugins: [],
   }

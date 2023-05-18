@@ -8,14 +8,13 @@ import {
 } from "firebase/auth";
 import { v4 as uuid } from "uuid";
 
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { getDatabase, ref, get, set } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_DATABASE_URL,
   projectId: process.env.REACT_APP_PRIJECT_ID,
-  databaseURL: process.env.REACT_APP_DATABASE,
 };
 
 // Initialize Firebase
@@ -40,7 +39,6 @@ export async function logout() {
 export function onUserStateChange(callback) {
   onAuthStateChanged(auth, async (user) => {
     const updateUser = user ? await adminUser(user) : null;
-    console.log(updateUser);
     callback(updateUser);
   });
 }
@@ -50,7 +48,6 @@ async function adminUser(user) {
   return get(ref(db, "admins")).then((snapshot) => {
     if (snapshot.exists()) {
       const admins = snapshot.val();
-      console.log(admins);
       const isAdmin = admins.includes(user.uid);
       return { ...user, isAdmin };
     }
@@ -65,5 +62,11 @@ export function addNewProduct(product, image) {
     image,
     id,
     options: product.options.split(","),
+  });
+}
+
+export async function getProducts() {
+  return get(ref(db, `products`)).then((snapshot) => {
+    return Object.values(snapshot.val());
   });
 }
