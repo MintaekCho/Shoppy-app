@@ -1,10 +1,8 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Button from "../components/ui/Button";
 
 export default function ProductDetails() {
-  const { id } = useParams();
-
   const addCart = () => {};
   const buy = () => {};
 

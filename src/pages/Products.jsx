@@ -4,20 +4,22 @@ import { getProducts } from "../api/firebase";
 import Product from "../components/Product";
 
 export default function Products() {
-  const {
-    data: products,
-    error,
-    isLoading,
-  } = useQuery(["products"], getProducts);
+  const [products, setProducts] = useState([]);
+  const { data, error, isLoading } = useQuery(["products"], getProducts, {staleTime: 1000 * 60 * 3});
+
+  useEffect(() => {
+    data && setProducts(data);
+  },[data]);
 
   const categoryChange = (e) => {
-    
+    if (e.target.innerHTML === "전체") return setProducts(data)
+    setProducts(data.filter((item) => item.category === e.target.innerHTML));
   };
 
   return (
     <main className="w-full max-w-7xl mt-4">
       <nav>
-        <ul>
+        <ul className="flex gap-10 font-bold text-xl text-white bg-red-400 opacity-80 rounded-lg py-2 px-6">
           <li className="cursor-pointer" onClick={categoryChange}>
             전체
           </li>

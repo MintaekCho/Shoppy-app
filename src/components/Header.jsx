@@ -13,7 +13,7 @@ export default function Header() {
     <header className="w-full max-w-7xl h-20 flex justify-between items-center relative after:content-[''] after:bg-gray-200 after:w-full after:h-[2px] after:absolute after:bottom-0">
       <Link to={"/"} className="flex items-center text-4xl text-red-400">
         <AiTwotoneShop />
-        Shoppy
+        RoughlyShop
       </Link>
       <nav className="flex gap-4 font-semibold items-center">
         <Link to={"/products"}>Products</Link>
