@@ -2,7 +2,7 @@ import React from "react";
 import { AiTwotoneShop } from "react-icons/ai";
 import { BsPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { useAuthContext } from "./context/AuthContextProvider";
+import { useAuthContext } from "../context/AuthContextProvider";
 import Button from "./ui/Button";
 import User from "./User";
 

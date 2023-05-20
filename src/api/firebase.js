@@ -8,7 +8,7 @@ import {
 } from "firebase/auth";
 import { v4 as uuid } from "uuid";
 
-import { getDatabase, ref, get, set } from "firebase/database";
+import { getDatabase, ref, get, set, remove } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -55,7 +55,7 @@ async function adminUser(user) {
   });
 }
 
-export function addNewProduct(product, image) {
+export async function addNewProduct(product, image) {
   const id = uuid();
   set(ref(db, `products/${id}`), {
     ...product,
@@ -63,6 +63,21 @@ export function addNewProduct(product, image) {
     id,
     options: product.options.split(","),
   });
+}
+
+export async function addNewCart(product, userId) {
+  set(ref(db, `cart/${userId}/${product.id}`), product);
+}
+
+export async function getCartProduct(userId) {
+  console.log(userId)
+  return get(ref(db, `cart/${userId}`)).then((snapshot) => {
+    return Object.values(snapshot.val());
+  });
+}
+
+export async function removeCart(userId, productId) {
+  return remove(ref(db, `cart/${userId}/${productId}`));
 }
 
 export async function getProducts() {

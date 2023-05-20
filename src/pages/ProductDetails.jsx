@@ -1,14 +1,35 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { addNewCart } from "../api/firebase";
 import Button from "../components/ui/Button";
+import { useAuthContext } from "../context/AuthContextProvider";
 
 export default function ProductDetails() {
-  const addCart = () => {};
-  const buy = () => {};
-
+  const { uid } = useAuthContext();
+  uid && console.log(uid);
   const {
-    state: { product: title, image, price, description, options },
+    state: { id, title, image, price, description, options },
   } = useLocation();
+  const [isLoding, setIsLoding] = useState(false);
+  const [cartMessage, setCartMessage] = useState(null);
+  const [selected, setSelected] = useState(options[0]);
+  const handleChange = (e) => {
+    setSelected(e.target.value);
+  };
+  const addCart = (e) => {
+    e.preventDefault();
+    const product = {
+      id,
+      title,
+      image,
+      price,
+      quantity: 1,
+      option: selected,
+    };
+    addNewCart(product, uid);
+  };
+
+  const buy = () => {};
 
   return (
     <section className="min-w-[430px] max-w-7xl flex flex-col md:flex-row gap-4 p-4">
@@ -17,24 +38,33 @@ export default function ProductDetails() {
         <h2 className="text-2xl font-bold">{title}</h2>
         <p className="border-b font-bold">{`₩${price}`}</p>
         <p>{description}</p>
+        {cartMessage && <p className="text-md font-bold">{cartMessage}</p>}
         <div className="flex items-center">
           <label className="w-10 text-red-400 mr-2" htmlFor="option">
             옵션:
           </label>
           <select
-            name="option"
             id="option"
             className="w-full h-10 border-gray-400 border-2"
+            value={selected}
+            onChange={handleChange}
           >
-            {options.map((option) => {
-              return <option value={option}>{option}</option>;
+            {options.map((option, index) => {
+              return (
+                <option  key={index}>
+                  {option}
+                </option>
+              );
             })}
           </select>
         </div>
 
         <div className="w-full flex flex-col gap-2">
-          <Button onClick={addCart} text={"장바구니에 추가"} />
-          <Button onClick={buy} text={"구매하기"} />
+          <Button
+            onClick={addCart}
+            text={isLoding ? "추가 중..." : "장바구니에 추가"}
+            isLoding={isLoding}
+          />
         </div>
       </div>
     </section>
