@@ -1,8 +1,9 @@
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import { addNewCart } from "../api/firebase";
+import { useLocation } from "react-router-dom";
 import Button from "../components/ui/Button";
 import { useAuthContext } from "../context/AuthContextProvider";
+import useCarts from "../hooks/useCarts";
 
 export default function ProductDetails() {
   const { uid } = useAuthContext();
@@ -16,8 +17,11 @@ export default function ProductDetails() {
   const handleChange = (e) => {
     setSelected(e.target.value);
   };
+  const { addCartProduct } = useCarts();
+
   const addCart = (e) => {
     e.preventDefault();
+    setIsLoding(true);
     const product = {
       id,
       title,
@@ -26,7 +30,12 @@ export default function ProductDetails() {
       quantity: 1,
       option: selected,
     };
-    addNewCart(product, uid);
+    addCartProduct.mutate(
+      { product, uid },
+      {
+        onSuccess: () => setIsLoding(false),
+      }
+    );
   };
 
   const buy = () => {};
@@ -50,11 +59,7 @@ export default function ProductDetails() {
             onChange={handleChange}
           >
             {options.map((option, index) => {
-              return (
-                <option  key={index}>
-                  {option}
-                </option>
-              );
+              return <option key={index}>{option}</option>;
             })}
           </select>
         </div>

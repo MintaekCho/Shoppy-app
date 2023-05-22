@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../api/firebase";
 import Product from "../components/Product";
+import useProducts from "../hooks/useProducts";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const { data, error, isLoading } = useQuery(["products"], getProducts, {staleTime: 1000 * 60 * 3});
+  const {fetchProducts: {data, isLoading, error}} = useProducts();
+ 
 
   useEffect(() => {
     data && setProducts(data);

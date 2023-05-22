@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import { addNewProduct } from "../api/firebase";
 import { imageUpload } from "../api/upload";
+import useProducts from "../hooks/useProducts";
 
 export default function NewProduct() {
   const [file, setFile] = useState();
   const [product, setProduct] = useState({});
   const [isLoding, setIsLoding] = useState(false);
   const [success, setSuccess] = useState(null);
-//   const navigation = useNavigate();
+  const { addProduct } = useProducts();
+
   const handleChange = (e) => {
     if (e.target.name === "file") {
       setFile(e.target.files[0]);
@@ -18,15 +18,22 @@ export default function NewProduct() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+
     setIsLoding(true);
     imageUpload(file)
-      .then((url) => addNewProduct(product, url))
-      .then(() => setSuccess("✅새로운 제품을 등록하였습니다"))
-      .then(() =>
-        setTimeout(() => {
-          setSuccess(null);
-        }, 4000)
-      )
+      .then((url) => {
+        addProduct.mutate(
+          { product, url },
+          {
+            onSuccess: () => {
+              setSuccess("✅새로운 제품을 등록하였습니다");
+              setTimeout(() => {
+                setSuccess(null);
+              }, 4000);
+            },
+          }
+        );
+      })
       .finally(() => setIsLoding(false));
     // navigation("/");
   };

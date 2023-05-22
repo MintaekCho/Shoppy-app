@@ -1,26 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useState } from "react";
-import { getCartProduct } from "../api/firebase";
 import CartProduct from "../components/CartProduct";
 import Button from "../components/ui/Button";
 import { useAuthContext } from "../context/AuthContextProvider";
+import useCarts from "../hooks/useCarts";
 
 export default function MyCart() {
   const { uid } = useAuthContext();
-  const { data: cartProduct, error, isloding } = useQuery(["product"], () =>
-    getCartProduct(uid)
-  );
+  const { getCartProducts: {data: cartProduct, isLoading, error} } = useCarts(uid)
   const [totalPrice, setTotalPrice] = useState(0)
 
   return (
     <>
-    {isloding && <p>Loading...</p>}
+    {isLoading && <p>Loading...</p>}
       <section className="w-full max-w-7xl min-w-min flex flex-col">
         {
-           cartProduct && cartProduct.map((cartProduct) => {
-                return <CartProduct key={cartProduct.id} item={cartProduct} totalPrice={totalPrice} setTotalPrice={setTotalPrice} />
+           cartProduct ? cartProduct.map((cartProduct) => {
+                return <CartProduct key={cartProduct.id} item={cartProduct} totalPrice={totalPrice} setTotalPrice={setTotalPrice} uid={uid} />
             })
+            :
+            <p>장바구니가 비었습니다. 열심히 쇼핑해주세요!!</p>
         }
       </section>
       <section className="w-full max-w-7xl h-20 mt-4 bg-slate-200 rounded-3xl text-right">

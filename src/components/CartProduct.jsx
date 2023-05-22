@@ -1,17 +1,30 @@
+import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useState } from "react";
+import { removeCart, updateCartProduct } from "../api/firebase";
+import { BsTrashFill } from "react-icons/bs";
+import useCarts from "../hooks/useCarts";
 
 export default function CartProduct({
   item,
-  item: { image, price, title, quantity: q },
+  item: { id, image, price, title, quantity: q },
   totalPrice,
   setTotalPrice,
+  uid,
 }) {
   const [quantity, setQuantity] = useState(q);
+  const queryClient = useQueryClient();
+  const { deleteCartProduct } = useCarts();
 
   return (
     item && (
-      <article className="w-full h-40 mt-4 flex items-center justify-between text-lg font-semibold">
+      <article className="w-full h-40 mt-4 flex items-center justify-between text-lg font-semibold relative">
+        <div>
+          <BsTrashFill
+            onClick={() => deleteCartProduct.mutate({ uid, id })}
+            className="absolute top-2 right-0 cursor-pointer"
+          />
+        </div>
         <div className="w-40 h-full">
           <img className="w-40 h-40 rounded-full" src={image} alt="image" />
         </div>
@@ -24,6 +37,7 @@ export default function CartProduct({
               if (quantity < 1) return setQuantity(0);
               setQuantity(quantity - 1);
               setTotalPrice((totalPrice -= price));
+              updateCartProduct(uid, { ...item, quantity: quantity - 1 });
             }}
           >
             -
@@ -33,6 +47,7 @@ export default function CartProduct({
             onClick={() => {
               setQuantity(quantity + 1);
               setTotalPrice((totalPrice += price));
+              updateCartProduct(uid, { ...item, quantity: quantity + 1 });
             }}
           >
             +

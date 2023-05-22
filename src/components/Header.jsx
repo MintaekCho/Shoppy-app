@@ -4,6 +4,7 @@ import { BsPencilFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContextProvider";
 import Button from "./ui/Button";
+import CartInfo from "./ui/CartInfo";
 import User from "./User";
 
 export default function Header() {
@@ -17,7 +18,7 @@ export default function Header() {
       </Link>
       <nav className="flex gap-4 font-semibold items-center">
         <Link to={"/products"}>Products</Link>
-        {user && <Link to={"/cart"}>Carts</Link>}
+        {user && <Link to={"/cart"}><CartInfo /></Link>}
 
         {user && user.isAdmin && (
           <Link className="flex items-center" to={"/new"}>
