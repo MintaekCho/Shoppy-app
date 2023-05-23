@@ -23,6 +23,8 @@ const provider = new GoogleAuthProvider();
 const auth = getAuth();
 const db = getDatabase(app);
 
+console.log(auth)
+
 export async function login() {
   return signInWithPopup(auth, provider).catch(console.error);
 }
@@ -36,10 +38,17 @@ export async function logout() {
  * 유저에 대한 정보는 컴포넌트에서 보관하고 있는데 새로고침하면 컴포넌트의 상태도 리셋되기 때문에
  * 유저가 로그인을 한 상태였는지 알 수가 없게 되버린다.
  */
-export function onUserStateChange(callback) {
+export function onUserStateChange(setAuthState) {
   onAuthStateChanged(auth, async (user) => {
     const updateUser = user ? await adminUser(user) : null;
-    callback(updateUser);
+    console.log(updateUser)
+    if(updateUser) setAuthState({
+      user: updateUser,
+      loading: false,
+    }) 
+    else setAuthState({
+      user: null
+    })
   });
 }
 

@@ -41,9 +41,9 @@ export default function ProductDetails() {
   };
 
   return (
-    <section className="min-w-[430px] max-w-7xl flex flex-col md:flex-row gap-4 p-4">
-      <img className="basis-7/12" src={image} alt={title} />
-      <div className=" basis-5/12 flex flex-col p-4 gap-4">
+    <section className="w-full min-w-[430px] max-w-7xl flex flex-col md:flex-row gap-4 p-4">
+      <img className="w-full basis-7/12 " src={image} alt={title} />
+      <div className="w-full basis-5/12 flex flex-col p-4 gap-4">
         <h2 className="text-2xl font-bold">{title}</h2>
         <p className="border-b font-bold">{`₩${price}`}</p>
         <p>{description}</p>

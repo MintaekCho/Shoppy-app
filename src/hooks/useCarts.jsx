@@ -19,8 +19,6 @@ export default function useCarts(uid) {
     }
   );
 
-  const updateCartProduct = useMutation();
-
   const deleteCartProduct = useMutation(({ uid, productId }) => {
     removeCart(uid, productId)
   },
@@ -30,7 +28,6 @@ export default function useCarts(uid) {
   return {
     getCartProducts,
     addCartProduct,
-    updateCartProduct,
     deleteCartProduct,
   };
 }
