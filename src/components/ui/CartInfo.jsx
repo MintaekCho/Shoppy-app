@@ -5,8 +5,9 @@ import useCarts from "../../hooks/useCarts";
 
 export default function CartInfo() {
   const { uid } = useAuthContext();
-  // TODO: invalidQuery 사용해서 실시간 데이터 업데이트 적용하기
-  const { getCartProducts: {data: data} } = useCarts(uid);
+  const {
+    getCartProducts: { data },
+  } = useCarts(uid);
   return (
     <div className="text-2xl relative">
       <BsCart />

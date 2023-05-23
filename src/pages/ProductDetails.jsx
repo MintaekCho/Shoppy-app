@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import Button from "../components/ui/Button";
@@ -7,7 +6,6 @@ import useCarts from "../hooks/useCarts";
 
 export default function ProductDetails() {
   const { uid } = useAuthContext();
-  uid && console.log(uid);
   const {
     state: { id, title, image, price, description, options },
   } = useLocation();
@@ -22,6 +20,7 @@ export default function ProductDetails() {
   const addCart = (e) => {
     e.preventDefault();
     setIsLoding(true);
+    setCartMessage("✅ 장바구니에 추가되었습니다.");
     const product = {
       id,
       title,
@@ -33,17 +32,18 @@ export default function ProductDetails() {
     addCartProduct.mutate(
       { product, uid },
       {
-        onSuccess: () => setIsLoding(false),
+        onSuccess: () => {
+          setIsLoding(false);
+          setTimeout(() => setCartMessage(null), 3000);
+        },
       }
     );
   };
 
-  const buy = () => {};
-
   return (
     <section className="min-w-[430px] max-w-7xl flex flex-col md:flex-row gap-4 p-4">
-      <img className="w-full basis-7/12" src={image} alt={title} />
-      <div className="w-full basis-5/12 flex flex-col p-4 gap-4">
+      <img className="basis-7/12" src={image} alt={title} />
+      <div className=" basis-5/12 flex flex-col p-4 gap-4">
         <h2 className="text-2xl font-bold">{title}</h2>
         <p className="border-b font-bold">{`₩${price}`}</p>
         <p>{description}</p>

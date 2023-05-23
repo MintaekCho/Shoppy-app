@@ -71,9 +71,10 @@ export async function addNewCart(product, userId) {
 
 export async function getCartProduct(userId) {
   return get(ref(db, `cart/${userId}`)).then((snapshot) => {
-    if (snapshot.val()) {
+    if (snapshot.exists()) {
       return Object.values(snapshot.val());
     }
+    return null;
   });
 }
 
@@ -82,12 +83,14 @@ export async function updateCartProduct(userId, product) {
 }
 
 export async function removeCart(userId, productId) {
-  console.log(userId);
   return remove(ref(db, `cart/${userId}/${productId}`));
 }
 
 export async function getProducts() {
   return get(ref(db, `products`)).then((snapshot) => {
-    return Object.values(snapshot.val());
+    if (snapshot.exists()) {
+      return Object.values(snapshot.val());
+    }
+    return null;
   });
 }
