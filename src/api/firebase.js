@@ -23,7 +23,6 @@ const provider = new GoogleAuthProvider();
 const auth = getAuth();
 const db = getDatabase(app);
 
-console.log(auth)
 
 export async function login() {
   return signInWithPopup(auth, provider).catch(console.error);
@@ -41,7 +40,6 @@ export async function logout() {
 export function onUserStateChange(setAuthState) {
   onAuthStateChanged(auth, async (user) => {
     const updateUser = user ? await adminUser(user) : null;
-    console.log(updateUser)
     if(updateUser) setAuthState({
       user: updateUser,
       loading: false,
